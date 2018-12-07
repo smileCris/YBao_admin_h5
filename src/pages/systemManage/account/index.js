@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Card, Table, Divider, Button, Modal } from 'antd'
+import { Card, Table, Divider, Modal, Button } from 'antd'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper'
 import MyModal from './modal'
 
@@ -9,12 +9,13 @@ const data = []
 for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
-    accountName: `Edward King ${i}`,
-    context: `London, Park Lane no. ${i}`,
+    name: `Edward King ${i}`,
+    email: 32,
+    address: `London, Park Lane no. ${i}`,
   })
 }
 
-class NoticeManage extends Component {
+class Account extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -28,21 +29,24 @@ class NoticeManage extends Component {
     dataIndex: 'id',
     render: (text, record, index) => `${index + 1}`,
   }, {
-    title: '通知内容',
-    dataIndex: 'context',
+    title: '账号',
+    dataIndex: 'name',
   }, {
-    title: '发布者',
-    dataIndex: 'accountName',
+    title: '邮箱',
+    dataIndex: 'email',
+  }, {
+    title: '地址',
+    dataIndex: 'address',
   }, {
     title: 'Action',
     dataIndex: 'operation',
-    width: 150,
-    fixed: 'right',
     render: (text, record) => (
       <span>
-        <a onClick={this.showDetailModal}>编辑</a>
+        <a onClick={this.showDetailModal}>详情</a>
         <Divider type="vertical" />
-        <a onClick={this.showConfirm}>删除</a>
+        <a onClick={this.stopConfirm}>停用</a>
+        <Divider type="vertical" />
+        <a onClick={this.deleteConfirm}>删除</a>
       </span>
     ),
   }]
@@ -83,30 +87,37 @@ class NoticeManage extends Component {
     })
   }
 
-  showConfirm = () => {
+  deleteConfirm = () => {
     confirm({
-      title: '你确定要删除这条通知吗?',
+      title: '你确定要删除这个账号吗？',
       content: '删除后将不可恢复！',
       okText: '确定',
       cancelText: '取消',
-      onOk() {
-        return new Promise((resolve, reject) => {
-          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-        }).catch(() => console.log('Oops errors!'))
-      },
-      onCancel() { },
+      onOk() { },
+      onCancel() { }
+    })
+  }
+
+  stopConfirm = () => {
+    confirm({
+      title: '你确定要停用这个账号吗？',
+      content: '停用后可再次启用！',
+      okText: '确定',
+      cancelText: '取消',
+      onOk() { },
+      onCancel() { }
     })
   }
 
   render() {
     return (
       <PageHeaderWrapper
-        title="系统通知"
-        content="对系统通知的发布，查询，删除，修改"
+        title="账号管理"
+        content="对管理员账号的增加，删除，禁用"
       >
         <Card
+          title="账号管理"
           bordered={false}
-          title="系统通知"
           extra={
             <Button type="primary" onClick={this.showAddModal}>添加</Button>
           }
@@ -117,13 +128,13 @@ class NoticeManage extends Component {
           />
         </Card>
         <MyModal
-          title="发布通知"
+          title="添加账号"
           visible={this.state.addVisible}
           onOk={this.addSure}
           onCancel={this.addCancel}
         />
         <MyModal
-          title="通知详情"
+          title="账号详情"
           visible={this.state.detailVisible}
           onOk={this.detailSure}
           onCancel={this.detailCancel}
@@ -134,4 +145,4 @@ class NoticeManage extends Component {
   }
 }
 
-export default NoticeManage
+export default Account

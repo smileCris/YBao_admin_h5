@@ -9,12 +9,13 @@ const data = []
 for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
-    accountName: `Edward King ${i}`,
-    context: `London, Park Lane no. ${i}`,
+    theme: `主题 ${i}`,
+    account: `账号 ${i}`,
+    ctime: `创建时间 no. ${i}`,
   })
 }
 
-class NoticeManage extends Component {
+class Theme extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -22,30 +23,6 @@ class NoticeManage extends Component {
       detailVisible: false
     }
   }
-
-  columns = [{
-    title: '序号',
-    dataIndex: 'id',
-    render: (text, record, index) => `${index + 1}`,
-  }, {
-    title: '通知内容',
-    dataIndex: 'context',
-  }, {
-    title: '发布者',
-    dataIndex: 'accountName',
-  }, {
-    title: 'Action',
-    dataIndex: 'operation',
-    width: 150,
-    fixed: 'right',
-    render: (text, record) => (
-      <span>
-        <a onClick={this.showDetailModal}>编辑</a>
-        <Divider type="vertical" />
-        <a onClick={this.showConfirm}>删除</a>
-      </span>
-    ),
-  }]
 
   showAddModal = () => {
     this.setState({
@@ -85,28 +62,49 @@ class NoticeManage extends Component {
 
   showConfirm = () => {
     confirm({
-      title: '你确定要删除这条通知吗?',
+      title: '你确定要删除该主题吗?',
       content: '删除后将不可恢复！',
       okText: '确定',
       cancelText: '取消',
-      onOk() {
-        return new Promise((resolve, reject) => {
-          setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-        }).catch(() => console.log('Oops errors!'))
-      },
+      onOk() { },
       onCancel() { },
     })
   }
 
+  columns = [{
+    title: '序号',
+    dataIndex: 'id',
+    render: (text, record, index) => `${index + 1}`,
+  }, {
+    title: '主题',
+    dataIndex: 'theme',
+  }, {
+    title: '发布账号',
+    dataIndex: 'account',
+  }, {
+    title: '创建时间',
+    dataIndex: 'ctime',
+  }, {
+    title: '操作',
+    dataIndex: 'operation',
+    render: (text, record) => (
+      <span>
+        <a onClick={this.showDetailModal}>编辑</a>
+        <Divider type="vertical" />
+        <a onClick={this.showConfirm}>删除</a>
+      </span>
+    ),
+  }]
+
   render() {
     return (
       <PageHeaderWrapper
-        title="系统通知"
-        content="对系统通知的发布，查询，删除，修改"
+        title="话题管理"
+        content="对妈妈圈话题的发布，查询，删除，修改"
       >
         <Card
           bordered={false}
-          title="系统通知"
+          title="话题管理"
           extra={
             <Button type="primary" onClick={this.showAddModal}>添加</Button>
           }
@@ -117,13 +115,13 @@ class NoticeManage extends Component {
           />
         </Card>
         <MyModal
-          title="发布通知"
+          title="添加话题"
           visible={this.state.addVisible}
           onOk={this.addSure}
           onCancel={this.addCancel}
         />
         <MyModal
-          title="通知详情"
+          title="话题详情"
           visible={this.state.detailVisible}
           onOk={this.detailSure}
           onCancel={this.detailCancel}
@@ -134,4 +132,4 @@ class NoticeManage extends Component {
   }
 }
 
-export default NoticeManage
+export default Theme

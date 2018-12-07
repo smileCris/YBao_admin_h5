@@ -1,17 +1,21 @@
-import { Component } from 'react';
-import { Form, Input, Upload, Select, Button, Card, Icon, Modal } from 'antd';
-import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import GeographicView from './GeographicView';
+import { Component } from 'react'
+import { Form, Input, Upload, Select, Button, Card, Icon, Modal } from 'antd'
+import PageHeaderWrapper from '@/components/PageHeaderWrapper'
+import GeographicView from '../component/GeographicView'
 
-const FormItem = Form.Item;
-const { Option } = Select;
+const FormItem = Form.Item
+const { Option } = Select
 const styles = {
   baseView: {
     width: '60%',
     minWidth: 400,
     padding: '40px 5%'
+  },
+  tlehed: {
+    color: '#333',
+    marginBottom: '30px'
   }
-};
+}
 
 const userData = {
   avatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
@@ -21,20 +25,20 @@ const userData = {
 }
 
 const validatorGeographic = (rule, value, callback) => {
-  const { province, city } = value;
+  const { province, city } = value
   if (!province.key) {
-    callback('请选择所在的省份！');
+    callback('请选择所在的省份！')
   }
   if (!city.key) {
-    callback('请选择所在的城市！');
+    callback('请选择所在的城市！')
   }
-  callback();
-};
+  callback()
+}
 
 @Form.create()
 class Personal extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       previewVisible: false,
       previewImage: '',
@@ -43,25 +47,25 @@ class Personal extends Component {
         status: 'done',
         url: userData.avatar,
       }]
-    };
-  };
+    }
+  }
 
-  handleAvatarCancel = () => this.setState({ previewVisible: false });
+  handleAvatarCancel = () => this.setState({ previewVisible: false })
 
   handleAvatarPreview = (file) => {
     this.setState({
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
-    });
-  };
+    })
+  }
 
-  handleAvatarChange = ({ fileList }) => this.setState({ fileList });
+  handleAvatarChange = ({ fileList }) => this.setState({ fileList })
 
   render() {
-    const { previewVisible, previewImage, fileList } = this.state;
+    const { previewVisible, previewImage, fileList } = this.state
     const {
       form: { getFieldDecorator },
-    } = this.props;
+    } = this.props
 
     const uploadButton = (
       <div>
@@ -121,28 +125,6 @@ class Personal extends Component {
                   ],
                 })(<Input />)}
               </FormItem>
-              <FormItem label="个人简介">
-                {getFieldDecorator('profile')(
-                  <Input.TextArea
-                    placeholder="个人简介"
-                    rows={4}
-                  />
-                )}
-              </FormItem>
-              <FormItem label="国家/地区">
-                {getFieldDecorator('country', {
-                  rules: [
-                    {
-                      required: true,
-                      message: "请选择所在国家！",
-                    },
-                  ],
-                })(
-                  <Select>
-                    <Option value="China">中国</Option>
-                  </Select>
-                )}
-              </FormItem>
               <FormItem label="所在省市">
                 {getFieldDecorator('geographic', {
                   rules: [
@@ -156,6 +138,9 @@ class Personal extends Component {
                   ],
                 })(<GeographicView />)}
               </FormItem>
+              <p style={styles.tlehed}>
+                {`最近登录时间：2020-10-10`}
+              </p>
               <Button type="primary">
                 更新基本信息
                 </Button>

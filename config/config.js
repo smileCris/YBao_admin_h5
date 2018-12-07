@@ -66,10 +66,10 @@ export default {
     '@antv/data-set': 'DataSet',
   },
   // proxy: {
-  //   '/server/api/': {
-  //     target: 'https://preview.pro.ant.design/',
+  //   '/api/': {
+  //     target: 'http://127.0.0.1:3000',
   //     changeOrigin: true,
-  //     pathRewrite: { '^/server': '' },
+  //     // pathRewrite: { '^/server': '' },
   //   },
   // },
   ignoreMomentLocale: true,

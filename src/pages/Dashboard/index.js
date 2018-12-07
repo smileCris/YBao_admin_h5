@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
-import { connect } from 'dva';
-import { Row, Col, Icon, Card, Tabs, DatePicker, Tooltip } from 'antd';
-import { ChartCard, MiniProgress, Bar } from '@/components/Charts';
-import numeral from 'numeral';
-import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { getTimeDistance } from '@/utils/utils';
+import React, { Component } from 'react'
+import { connect } from 'dva'
+import { Row, Col, Icon, Card, Tabs, DatePicker, Tooltip } from 'antd'
+import { ChartCard, MiniProgress, Bar } from '@/components/Charts'
+import numeral from 'numeral'
+import PageHeaderWrapper from '@/components/PageHeaderWrapper'
+import { getTimeDistance } from '@/utils/utils'
 
-import styles from './index.less';
+import styles from './index.less'
 
-const { TabPane } = Tabs;
-const { RangePicker } = DatePicker;
+const { TabPane } = Tabs
 
 @connect(({ chart, loading }) => ({
   chart,
@@ -17,75 +16,42 @@ const { RangePicker } = DatePicker;
 }))
 class Dashboard extends Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
 
   state = {
     salesType: 'all',
-    rangePickerValue: getTimeDistance('year'),
     loading: true,
-  };
+  }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch } = this.props
     this.reqRef = requestAnimationFrame(() => {
       dispatch({
         type: 'chart/fetch',
-      });
+      })
       this.timeoutId = setTimeout(() => {
         this.setState({
           loading: false,
-        });
-      }, 600);
-    });
+        })
+      }, 600)
+    })
   }
 
   componentWillUnmount() {
-    const { dispatch } = this.props;
+    const { dispatch } = this.props
     dispatch({
       type: 'chart/clear',
-    });
-    cancelAnimationFrame(this.reqRef);
-    clearTimeout(this.timeoutId);
+    })
+    cancelAnimationFrame(this.reqRef)
+    clearTimeout(this.timeoutId)
   }
 
-  handleRangePickerChange = rangePickerValue => {
-    const { dispatch } = this.props;
-    this.setState({
-      rangePickerValue,
-    });
-
-    dispatch({
-      type: 'chart/fetchSalesData',
-    });
-  };
-
-  selectDate = type => {
-    const { dispatch } = this.props;
-    this.setState({
-      rangePickerValue: getTimeDistance(type),
-    });
-
-    dispatch({
-      type: 'chart/fetchSalesData',
-    });
-  };
-
   render() {
-    const { rangePickerValue, salesType, loading: propsLoding } = this.state;
-    const { chart, loading: stateLoading } = this.props;
-    const { salesData } = chart;
-    const loading = propsLoding || stateLoading;
-
-    const salesExtra = (
-      <div className={styles.salesExtraWrap}>
-        <RangePicker
-          value={rangePickerValue}
-          onChange={this.handleRangePickerChange}
-          style={{ width: 256 }}
-        />
-      </div>
-    );
+    const { salesType, loading: propsLoding } = this.state
+    const { chart, loading: stateLoading } = this.props
+    const { salesData } = chart
+    const loading = propsLoding || stateLoading
 
     const topColResponsiveProps = {
       xs: 24,
@@ -94,7 +60,7 @@ class Dashboard extends Component {
       lg: 12,
       xl: 6,
       style: { marginBottom: 24 },
-    };
+    }
 
     return (
       <PageHeaderWrapper
@@ -178,7 +144,7 @@ class Dashboard extends Component {
 
         <Card loading={loading} bordered={false} bodyStyle={{ padding: 0 }}>
           <div className={styles.salesCard}>
-            <Tabs tabBarExtraContent={salesExtra} size="large" tabBarStyle={{ marginBottom: 24 }}>
+            <Tabs size="large" tabBarStyle={{ marginBottom: 24 }}>
               <TabPane
                 tab="总访问量"
                 key="all"
@@ -251,8 +217,8 @@ class Dashboard extends Component {
           </div>
         </Card>
       </PageHeaderWrapper>
-    );
+    )
   }
 }
 
-export default Dashboard;
+export default Dashboard

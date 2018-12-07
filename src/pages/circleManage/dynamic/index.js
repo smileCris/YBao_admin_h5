@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Card, Table, Divider, Modal } from 'antd'
+import { Card, Table, Divider, Button, Modal } from 'antd'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper'
 import MyModal from './modal'
 
@@ -9,14 +9,13 @@ const data = []
 for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
-    name: `Edward King ${i}`,
-    email: `E${i}`,
-    ctime: 32,
-    utime: `London, Park Lane no. ${i}`,
+    theme: `主题 ${i}`,
+    username: `用户 ${i}`,
+    ctime: `发布时间 no. ${i}`,
   })
 }
 
-class UserManage extends Component {
+class Dynamic extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -29,19 +28,16 @@ class UserManage extends Component {
     dataIndex: 'id',
     render: (text, record, index) => `${index + 1}`,
   }, {
-    title: '用户名',
-    dataIndex: 'name',
+    title: '所属主题',
+    dataIndex: 'theme',
   }, {
-    title: '邮箱',
-    dataIndex: 'email',
+    title: '发布用户',
+    dataIndex: 'username',
   }, {
-    title: '创建时间',
+    title: '发布时间',
     dataIndex: 'ctime',
   }, {
-    title: '最近登录时间',
-    dataIndex: 'utime',
-  }, {
-    title: 'Action',
+    title: '操作',
     dataIndex: 'operation',
     render: (text, record) => (
       <span>
@@ -66,7 +62,7 @@ class UserManage extends Component {
 
   showConfirm = () => {
     confirm({
-      title: '你确定要删除这个用户吗？',
+      title: '你确定要删除这条动态吗？',
       content: '删除后将不可恢复！',
       okText: '确定',
       cancelText: '取消',
@@ -78,12 +74,12 @@ class UserManage extends Component {
   render() {
     return (
       <PageHeaderWrapper
-        title="用户管理"
-        content="对app用户的查询，禁用"
+        title="动态管理"
+        content="对妈妈圈动态的查询，删除"
       >
         <Card
           bordered={false}
-          title="用户管理"
+          title="动态管理"
         >
           <Table
             columns={this.columns}
@@ -91,7 +87,7 @@ class UserManage extends Component {
           />
         </Card>
         <MyModal
-          title="用户详情"
+          title="动态详情"
           visible={this.state.visible}
           onCancel={this.handleCancel}
         />
@@ -100,4 +96,4 @@ class UserManage extends Component {
   }
 }
 
-export default UserManage
+export default Dynamic

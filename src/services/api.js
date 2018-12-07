@@ -1,6 +1,28 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 
+export async function queryAllTraffic() {
+  return request('/api/traffic/all');
+}
+
+export async function editTheme(params) {
+  return request('/api/circle/editTheme', {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+  });
+}
+
+export async function person(params) {
+  return request('/api/admin/person', {
+    method: 'POST',
+    body: {
+      ...params,
+    },
+  });
+}
+
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }

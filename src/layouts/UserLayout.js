@@ -3,7 +3,7 @@ import { formatMessage } from 'umi/locale';
 import Link from 'umi/link';
 import { Icon } from 'antd';
 import styles from './UserLayout.less';
-import logo from '../assets/logo.svg';
+import YIcon from '@/components/SiderMenu/icon';
 
 const links = [
   {
@@ -45,12 +45,13 @@ class UserLayout extends React.PureComponent {
         <div className={styles.content}>
           <div className={styles.top}>
             <div className={styles.header}>
-              <Link to="/">
-                <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>Ant Design</span>
-              </Link>
+              <div className={styles.logo} id="logo">
+                <Link to="/">
+                  <YIcon className={styles.icon} />
+                  <h1>柚宝母婴照护系统</h1>
+                </Link>
+              </div>
             </div>
-            <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
           </div>
           {children}
         </div>
