@@ -76,10 +76,10 @@ class Bar extends Component {
     };
 
     const tooltip = [
-      'x*y',
-      (x, y) => ({
-        name: x,
-        value: y,
+      'date*num',
+      (date, num) => ({
+        name: date,
+        value: num,
       }),
     ];
 
@@ -95,14 +95,14 @@ class Bar extends Component {
             padding={padding || 'auto'}
           >
             <Axis
-              name="x"
+              name="date"
               title={false}
               label={autoHideXLabels ? false : {}}
               tickLine={autoHideXLabels ? false : {}}
             />
-            <Axis name="y" min={0} />
+            <Axis name="num" min={0} />
             <Tooltip showTitle={false} crosshairs={false} />
-            <Geom type="interval" position="x*y" color={color} tooltip={tooltip} />
+            <Geom type="interval" position="date*num" color={color} tooltip={tooltip} />
           </Chart>
         </div>
       </div>

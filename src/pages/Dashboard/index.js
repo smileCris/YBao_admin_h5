@@ -12,7 +12,12 @@ const { TabPane } = Tabs
 
 @connect(({ chart, loading }) => ({
   chart,
-  loading: loading.effects['chart/fetch'],
+  loading: loading.effects[
+    'chart/getAllTraffic',
+    'chart/getCircleTraffic',
+    'chart/getQuestionTraffic',
+    'chart/getStoryTraffic'
+  ],
 }))
 class Dashboard extends Component {
   constructor(props) {
@@ -28,7 +33,16 @@ class Dashboard extends Component {
     const { dispatch } = this.props
     this.reqRef = requestAnimationFrame(() => {
       dispatch({
-        type: 'chart/fetch',
+        type: 'chart/getAllTraffic',
+      })
+      dispatch({
+        type: 'chart/getCircleTraffic',
+      })
+      dispatch({
+        type: 'chart/getQuestionTraffic',
+      })
+      dispatch({
+        type: 'chart/getStoryTraffic',
       })
       this.timeoutId = setTimeout(() => {
         this.setState({
@@ -50,7 +64,7 @@ class Dashboard extends Component {
   render() {
     const { salesType, loading: propsLoding } = this.state
     const { chart, loading: stateLoading } = this.props
-    const { salesData } = chart
+    const { salesData, allVisit, allChart, circleVisit, circleChart, questionVisit, questionChart, storyVisit, storyChart } = chart
     const loading = propsLoding || stateLoading
 
     const topColResponsiveProps = {
@@ -80,7 +94,7 @@ class Dashboard extends Component {
                 </Tooltip>
               }
               loading={loading}
-              total={numeral(126560).format('0,0')}
+              total={numeral(allVisit).format('0,0')}
               contentHeight={46}
             >
               <MiniProgress percent={78} strokeWidth={8} target={80} color="#ff9f42" />
@@ -98,7 +112,7 @@ class Dashboard extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={numeral(8846).format('0,0')}
+              total={numeral(circleVisit).format('0,0')}
               contentHeight={46}
             >
               <MiniProgress percent={38} strokeWidth={8} target={40} color="rgb(86, 173, 253)" />
@@ -116,7 +130,7 @@ class Dashboard extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={numeral(6560).format('0,0')}
+              total={numeral(questionVisit).format('0,0')}
               contentHeight={46}
             >
               <MiniProgress percent={48} strokeWidth={8} target={50} color="rgb(151, 95, 228)" />
@@ -134,7 +148,7 @@ class Dashboard extends Component {
                   <Icon type="info-circle-o" />
                 </Tooltip>
               }
-              total={numeral(3325).format('0,0')}
+              total={numeral(storyVisit).format('0,0')}
               contentHeight={46}
             >
               <MiniProgress percent={58} strokeWidth={8} target={60} color="#f56e66" />
@@ -155,7 +169,7 @@ class Dashboard extends Component {
                       <Bar
                         height={295}
                         title="访问量趋势"
-                        data={salesData}
+                        data={allChart}
                         color="#ff9f42"
                       />
                     </div>
@@ -172,7 +186,7 @@ class Dashboard extends Component {
                       <Bar
                         height={292}
                         title="活跃趋势"
-                        data={salesData}
+                        data={circleChart}
                         color="rgb(86, 173, 253)"
                       />
                     </div>
@@ -189,7 +203,7 @@ class Dashboard extends Component {
                       <Bar
                         height={292}
                         title="活跃趋势"
-                        data={salesData}
+                        data={questionChart}
                         color="rgb(151, 95, 228)"
                       />
                     </div>
@@ -206,7 +220,7 @@ class Dashboard extends Component {
                       <Bar
                         height={292}
                         title="收听趋势"
-                        data={salesData}
+                        data={storyChart}
                         color="#f56e66"
                       />
                     </div>

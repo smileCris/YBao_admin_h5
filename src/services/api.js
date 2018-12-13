@@ -1,8 +1,24 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 
+// 数据分析-总浏览量
 export async function queryAllTraffic() {
   return request('/api/traffic/all');
+}
+
+// 数据分析-妈妈圈浏览量
+export async function queryCircleTraffic() {
+  return request('/api/traffic/circle');
+}
+
+// 数据分析-育儿问答浏览量
+export async function queryQuestionTraffic() {
+  return request('/api/traffic/question');
+}
+
+// 数据分析-睡前故事浏览量
+export async function queryStoryTraffic() {
+  return request('/api/traffic/story');
 }
 
 export async function editTheme(params) {

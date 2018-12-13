@@ -1,97 +1,95 @@
-import { fakeChartData } from '@/services/api'
-import { queryAllTraffic } from '@/services/api'
-import { editTheme } from '@/services/api'
-import { person } from '@/services/api'
+import {
+  fakeChartData,
+  queryAllTraffic,
+  queryCircleTraffic,
+  queryQuestionTraffic,
+  queryStoryTraffic
+} from '@/services/api'
 
 export default {
   namespace: 'chart',
 
   state: {
-    visitData: [],
-    visitData2: [],
-    salesData: [],
-    searchData: [],
-    offlineData: [],
-    offlineChartData: [],
-    salesTypeData: [],
-    salesTypeDataOnline: [],
-    salesTypeDataOffline: [],
-    radarData: [],
-    loading: false,
-    allTraffic: [],
-    editData: []
+    allVisit: 0,
+    allChart: [],
+    circleVisit: 0,
+    circleChart: [],
+    questionVisit: 0,
+    questionChart: [],
+    storyVisit: 0,
+    storyChart: []
   },
 
-  subscriptions: {
-    setup({ dispatch, history }) {
-      history.listen(({ pathname }) => {
-        if (pathname === '/dashboard') {
-          // dispatch({ type: 'getAllTraffic' })
-          // dispatch({
-          //   type: 'themeEdit',
-          //   payload: {
-          //     id: 1,
-          //     theme: '妈妈食谱'
-          //   }
-          // })
-          // dispatch({
-          //   type: 'getPerInfo',
-          //   payload: {
-          //     username: 'admin',
-          //     password: 'admin'
-          //   }
-          // })
-        }
-      })
-    },
-  },
+  subscriptions: {},
 
   effects: {
-    // *themeEdit({ payload }, { call, put }) {
-    //   const res = yield call(editTheme, payload)
-    //   console.log(res)
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       editData: res
-    //     },
-    //   })
-    // },
-    // *getPerInfo({ payload }, { call, put }) {
-    //   const res = yield call(person, payload)
-    //   console.log(res)
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       res
-    //     },
-    //   })
-    // },
-    // *getAllTraffic(_, { call, put }) {
-    //   const res = yield call(queryAllTraffic)
-    //   console.log(res)
-    //   yield put({
-    //     type: 'save',
-    //     payload: {
-    //       allTraffic: res.data
-    //     },
-    //   })
-    // },
-    *fetch(_, { call, put }) {
-      const response = yield call(fakeChartData)
-      yield put({
-        type: 'save',
-        payload: response,
-      })
+    // 总访问量
+    *getAllTraffic(_, { call, put }) {
+      const res = yield call(queryAllTraffic)
+      if (res.code == 200) {
+        let a = []
+        res.data.map(v => {
+          a.push(v.num)
+        })
+        yield put({
+          type: 'save',
+          payload: {
+            allVisit: a.reduce((total, num) => total + num),
+            allChart: res.data
+          },
+        })
+      }
     },
-    *fetchSalesData(_, { call, put }) {
-      const response = yield call(fakeChartData)
-      yield put({
-        type: 'save',
-        payload: {
-          salesData: response.salesData,
-        },
-      })
+    // 妈妈圈访问量
+    *getCircleTraffic(_, { call, put }) {
+      const res = yield call(queryCircleTraffic)
+      if (res.code == 200) {
+        let a = []
+        res.data.map(v => {
+          a.push(v.num)
+        })
+        yield put({
+          type: 'save',
+          payload: {
+            circleVisit: a.reduce((total, num) => total + num),
+            circleChart: res.data
+          },
+        })
+      }
+    },
+    // 育儿问答访问量
+    *getQuestionTraffic(_, { call, put }) {
+      const res = yield call(queryQuestionTraffic)
+      if (res.code == 200) {
+        let a = []
+        res.data.map(v => {
+          a.push(v.num)
+        })
+        yield put({
+          type: 'save',
+          payload: {
+            questionVisit: a.reduce((total, num) => total + num),
+            questionChart: res.data
+          },
+        })
+      }
+    },
+    // 睡前故事访问量
+    *getStoryTraffic(_, { call, put }) {
+      const res = yield call(queryStoryTraffic)
+      if (res.code == 200) {
+        let a = []
+        res.data.map(v => {
+          a.push(v.num)
+        })
+        yield put({
+          type: 'save',
+          payload: {
+            storyVisit: a.reduce((total, num) => total + num),
+            storyChart: res.data
+          },
+        })
+      }
     },
   },
 
@@ -104,16 +102,14 @@ export default {
     },
     clear() {
       return {
-        visitData: [],
-        visitData2: [],
-        salesData: [],
-        searchData: [],
-        offlineData: [],
-        offlineChartData: [],
-        salesTypeData: [],
-        salesTypeDataOnline: [],
-        salesTypeDataOffline: [],
-        radarData: [],
+        allVisit: 0,
+        allChart: [],
+        circleVisit: 0,
+        circleChart: [],
+        questionVisit: 0,
+        questionChart: [],
+        storyVisit: 0,
+        storyChart: []
       }
     },
   },
