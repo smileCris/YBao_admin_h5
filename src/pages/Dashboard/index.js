@@ -22,11 +22,9 @@ const { TabPane } = Tabs
 class Dashboard extends Component {
   constructor(props) {
     super(props)
-  }
-
-  state = {
-    salesType: 'all',
-    loading: true,
+    this.state = {
+      loading: true,
+    }
   }
 
   componentDidMount() {
@@ -62,7 +60,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { salesType, loading: propsLoding } = this.state
+    const { loading: propsLoding } = this.state
     const { chart, loading: stateLoading } = this.props
     const { salesData, allVisit, allChart, circleVisit, circleChart, questionVisit, questionChart, storyVisit, storyChart } = chart
     const loading = propsLoding || stateLoading
