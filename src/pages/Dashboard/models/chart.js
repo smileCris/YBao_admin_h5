@@ -1,5 +1,4 @@
 import {
-  fakeChartData,
   queryAllTraffic,
   queryCircleTraffic,
   queryQuestionTraffic,
@@ -19,8 +18,6 @@ export default {
     storyVisit: 0,
     storyChart: []
   },
-
-  subscriptions: {},
 
   effects: {
     // 总访问量
