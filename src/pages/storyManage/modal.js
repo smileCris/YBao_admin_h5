@@ -1,4 +1,5 @@
 import { Modal, Button, Form, Input, Upload, Icon, message } from 'antd'
+import { connect } from 'dva'
 
 const FormItem = Form.Item
 const Dragger = Upload.Dragger
@@ -9,24 +10,57 @@ class MyModal extends React.Component {
     this.state = {
       previewVisible: false,
       previewImage: '',
-      fileList: [{
-        uid: '-1',
-        name: 'xxx.png',
-        status: 'done',
-        url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-      }]
+      fileList: [],
+      storyFile: [],
+      imgFile: []
     }
   }
 
-  handleSubmit = () => {
+  // 编辑
+  handleSure = (id) => {
+    this.props.form.validateFields((err, values) => {
+      values.id = id
+      this.props.dispatch({
+        type: 'story/edit',
+        payload: values
+      })
+      this.props.form.resetFields()
+    })
     this.props.onOk()
   }
 
-  handleAddCancel = () => {
+  // 新增
+  handleCreate = () => {
+    this.props.form.validateFields((err, values) => {
+      if (err) {
+        return
+      }
+      values.img = this.state.imgFile
+      values.file = this.state.storyFile
+      this.props.dispatch({
+        type: 'story/add',
+        payload: values
+      })
+      this.props.form.resetFields()
+    })
+    this.props.onOk()
+  }
+
+  handleCancel = () => {
     this.props.onCancel()
   }
 
-  handleChange = ({ fileList }) => this.setState({ fileList })
+  handleChange = ({ file, fileList }) => {
+    if (file.status == 'done') {
+      this.setState({
+        imgFile: file.response.data.img
+      })
+      message.success(`${file.name} 文件上传成功！`)
+    } else if (status === 'error') {
+      message.error(`${file.name} 文件上传失败！`)
+    }
+    this.setState({ fileList })
+  }
   handlePicCancel = () => this.setState({ previewVisible: false })
 
   handlePreview = (file) => {
@@ -34,6 +68,18 @@ class MyModal extends React.Component {
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
     })
+  }
+
+  fileChange = (info) => {
+    const status = info.file.status
+    if (status === 'done') {
+      this.setState({
+        storyFile: info.file.response.data.file
+      })
+      message.success(`${info.file.name} 文件上传成功！`)
+    } else if (status === 'error') {
+      message.error(`${info.file.name} 文件上传失败！`)
+    }
   }
 
   render() {
@@ -48,6 +94,8 @@ class MyModal extends React.Component {
     const {
       visible,
       title,
+      detail,
+      record,
       form: { getFieldDecorator }
     } = this.props
 
@@ -61,75 +109,81 @@ class MyModal extends React.Component {
       }
     }
 
-    const props = {
-      name: 'file',
-      action: '//jsonplaceholder.typicode.com/posts/',
-      onChange(info) {
-        const status = info.file.status
-        if (status !== 'uploading') {
-          console.log(info.file, info.fileList)
-        }
-        if (status === 'done') {
-          message.success(`${info.file.name} file uploaded successfully.`)
-        } else if (status === 'error') {
-          message.error(`${info.file.name} file upload failed.`)
-        }
-      },
-    }
-
     return (
       <Modal
         title={title}
         visible={visible}
-        onOk={this.handleSubmit}
-        onCancel={this.handleAddCancel}
+        onOk={detail ? () => { this.handleSure(record.id) } : this.handleCreate}
+        onCancel={this.handleCancel}
       >
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={detail ? this.handleSure : this.handleCreate}>
           <FormItem
             {...formItemLayout}
             label="故事名："
           >
             {getFieldDecorator('name', {
+              initialValue: detail && record ? record.name : null,
               rules: [{ required: true, message: '请输入故事名!' }],
             })(
               <Input placeholder="请输入故事名" />
             )}
           </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="故事封面："
-          >
-            <div className="clearfix">
-              <Upload
-                action="//jsonplaceholder.typicode.com/posts/"
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={this.handlePreview}
-                onChange={this.handleChange}
+          {
+            detail ? '' :
+              <FormItem
+                {...formItemLayout}
+                label="故事封面："
               >
-                {fileList.length >= 1 ? null : uploadButton}
-              </Upload>
-              <Modal visible={previewVisible} footer={null} onCancel={this.handlePicCancel}>
-                <img alt="example" style={{ width: '100%' }} src={previewImage} />
-              </Modal>
-            </div>
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label="故事文件："
-          >
-            <Dragger {...props}>
-              <p className="ant-upload-drag-icon">
-                <Icon type="inbox" />
-              </p>
-              <p className="ant-upload-text">单击或拖动文件到该区域上传</p>
-              <p className="ant-upload-hint">请上传故事文件</p>
-            </Dragger>
-          </FormItem>
+                <div className="clearfix">
+                  <Upload
+                    action="http://localhost:8000/api/story/addPic"
+                    listType="picture-card"
+                    fileList={fileList}
+                    onPreview={this.handlePreview}
+                    onChange={this.handleChange}
+                    accept="image/*"
+                  >
+                    {fileList.length >= 1 ? null : uploadButton}
+                  </Upload>
+                  <Modal visible={previewVisible} footer={null} onCancel={this.handlePicCancel}>
+                    <img alt="example" style={{ width: '100%' }} src={previewImage} />
+                  </Modal>
+                </div>
+              </FormItem>
+          }
+          {
+            detail ? '' :
+              <FormItem
+                {...formItemLayout}
+                label="故事文件："
+              >
+                <Dragger
+                  name="file"
+                  action="http://localhost:8000/api/story/addFile"
+                  onChange={this.fileChange}
+                  accept="audio/*"
+                >
+                  <p className="ant-upload-drag-icon">
+                    <Icon type="inbox" />
+                  </p>
+                  <p className="ant-upload-text">单击或拖动文件到该区域上传</p>
+                  <p className="ant-upload-hint">请上传故事文件</p>
+                </Dragger>
+              </FormItem>
+          }
+          {
+            detail ?
+              <FormItem
+                {...formItemLayout}
+                label="创建时间："
+              >
+                <p>{record.ctime}</p>
+              </FormItem> : ''
+          }
         </Form>
       </Modal >
     )
   }
 }
 
-export default Form.create()(MyModal)
+export default connect(({ story }) => ({ story }))(Form.create()(MyModal))

@@ -21,6 +21,41 @@ export async function queryStoryTraffic() {
   return request('/api/traffic/story');
 }
 
+// 睡前故事-列表
+export async function storyList() {
+  return request('/api/story/list');
+}
+
+// 睡前故事-编辑
+export async function storyEdit(params) {
+  return request('/api/story/edit', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
+// 睡前故事-删除
+export async function storyDelete(params) {
+  return request('/api/story/delete', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
+// 睡前故事-添加
+export async function storyAdd(params) {
+  return request('/api/story/add', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
 export async function editTheme(params) {
   return request('/api/circle/editTheme', {
     method: 'POST',
