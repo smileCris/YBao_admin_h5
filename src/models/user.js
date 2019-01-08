@@ -18,6 +18,7 @@ export default {
     },
     *fetchCurrent(_, { call, put }) {
       const response = yield call(queryCurrent);
+      localStorage.setItem('accountName', response.name);
       yield put({
         type: 'saveCurrentUser',
         payload: response,

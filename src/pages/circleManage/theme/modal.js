@@ -1,13 +1,39 @@
 import { Modal, Form, Input } from 'antd'
+import { connect } from 'dva'
 
 const FormItem = Form.Item
 
 class MyModal extends React.Component {
-  handleSubmit = () => {
+  // 新增
+  handleCreate = () => {
+    this.props.form.validateFields((err, values) => {
+      if (err) {
+        return
+      }
+      values.accountName = localStorage.getItem('accountName')
+      this.props.dispatch({
+        type: 'circle/addTheme',
+        payload: values
+      })
+      this.props.form.resetFields()
+    })
     this.props.onOk()
   }
 
-  handleAddCancel = () => {
+  // 编辑
+  handleSubmit = (id) => {
+    this.props.form.validateFields((err, values) => {
+      values.id = id
+      this.props.dispatch({
+        type: 'circle/editTheme',
+        payload: values
+      })
+      this.props.form.resetFields()
+    })
+    this.props.onOk()
+  }
+
+  handleCancel = () => {
     this.props.onCancel()
   }
 
@@ -16,6 +42,7 @@ class MyModal extends React.Component {
       title,
       visible,
       detail,
+      record,
       form: { getFieldDecorator }
     } = this.props
 
@@ -33,15 +60,16 @@ class MyModal extends React.Component {
       <Modal
         title={title}
         visible={visible}
-        onOk={this.handleSubmit}
-        onCancel={this.handleAddCancel}
+        onOk={detail ? () => { this.handleSubmit(record.id) } : this.handleCreate}
+        onCancel={this.handleCancel}
       >
-        <Form onSubmit={this.handleSubmit}>
+        <Form onSubmit={detail ? this.handleSubmit : this.handleCreate}>
           <FormItem
             {...formItemLayout}
             label="主题："
           >
             {getFieldDecorator('theme', {
+              initialValue: detail && record ? record.theme : null,
               rules: [{ required: true, message: '请输入主题!' }],
             })(
               <Input placeholder="请输入主题" />
@@ -53,7 +81,7 @@ class MyModal extends React.Component {
                 {...formItemLayout}
                 label="发布账号："
               >
-                <p></p>
+                <p>{record.accountName}</p>
               </FormItem> : ''
           }
           {
@@ -62,7 +90,7 @@ class MyModal extends React.Component {
                 {...formItemLayout}
                 label="创建时间："
               >
-                <p></p>
+                <p>{record.ctime}</p>
               </FormItem> : ''
           }
         </Form>
@@ -71,4 +99,4 @@ class MyModal extends React.Component {
   }
 }
 
-export default Form.create()(MyModal)
+export default connect(({ circle }) => ({ circle }))(Form.create()(MyModal))

@@ -1,25 +1,17 @@
 import { Component } from 'react'
+import { connect } from 'dva'
 import { Card, Table, Divider, Button, Modal } from 'antd'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper'
 import MyModal from './modal'
 
 const confirm = Modal.confirm
 
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    theme: `主题 ${i}`,
-    username: `用户 ${i}`,
-    ctime: `发布时间 no. ${i}`,
-  })
-}
-
 class Dynamic extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      visible: false
+      visible: false,
+      record: ''
     }
   }
 
@@ -32,7 +24,7 @@ class Dynamic extends Component {
     dataIndex: 'theme',
   }, {
     title: '发布用户',
-    dataIndex: 'username',
+    dataIndex: 'accountName',
   }, {
     title: '发布时间',
     dataIndex: 'ctime',
@@ -41,16 +33,17 @@ class Dynamic extends Component {
     dataIndex: 'operation',
     render: (text, record) => (
       <span>
-        <a onClick={this.showModal}>详情</a>
+        <a onClick={() => this.showModal(record)}>详情</a>
         <Divider type="vertical" />
-        <a onClick={this.showConfirm}>删除</a>
+        <a onClick={() => this.showConfirm(record)}>删除</a>
       </span>
     ),
   }]
 
-  showModal = () => {
+  showModal = (record) => {
     this.setState({
-      visible: true
+      visible: true,
+      record: record
     })
   }
 
@@ -60,18 +53,27 @@ class Dynamic extends Component {
     })
   }
 
-  showConfirm = () => {
+  showConfirm = (record) => {
+    const { dispatch } = this.props
     confirm({
       title: '你确定要删除这条动态吗？',
       content: '删除后将不可恢复！',
       okText: '确定',
       cancelText: '取消',
-      onOk() { },
+      onOk() {
+        dispatch({
+          type: 'circle/deleteDynamic',
+          payload: {
+            id: record.id
+          }
+        })
+      },
       onCancel() { }
     })
   }
 
   render() {
+    const { circle: { dynamicData } } = this.props
     return (
       <PageHeaderWrapper
         title="动态管理"
@@ -83,17 +85,19 @@ class Dynamic extends Component {
         >
           <Table
             columns={this.columns}
-            dataSource={data}
+            dataSource={dynamicData}
+            rowKey={record => record.id}
           />
         </Card>
         <MyModal
           title="动态详情"
           visible={this.state.visible}
           onCancel={this.handleCancel}
+          record={this.state.record}
         />
       </PageHeaderWrapper>
     )
   }
 }
 
-export default Dynamic
+export default connect(({ circle }) => ({ circle }))(Dynamic)

@@ -1,26 +1,18 @@
 import { Component } from 'react'
+import { connect } from 'dva'
 import { Card, Table, Divider, Button, Modal } from 'antd'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper'
 import MyModal from './modal'
 
 const confirm = Modal.confirm
 
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    theme: `主题 ${i}`,
-    account: `账号 ${i}`,
-    ctime: `创建时间 no. ${i}`,
-  })
-}
-
 class Theme extends Component {
   constructor(props) {
     super(props)
     this.state = {
       addVisible: false,
-      detailVisible: false
+      detailVisible: false,
+      record: ''
     }
   }
 
@@ -42,9 +34,10 @@ class Theme extends Component {
     })
   }
 
-  showDetailModal = () => {
+  showDetailModal = (record) => {
     this.setState({
       detailVisible: true,
+      record: record
     })
   }
 
@@ -60,13 +53,21 @@ class Theme extends Component {
     })
   }
 
-  showConfirm = () => {
+  showConfirm = (record) => {
+    const { dispatch } = this.props
     confirm({
       title: '你确定要删除该主题吗?',
       content: '删除后将不可恢复！',
       okText: '确定',
       cancelText: '取消',
-      onOk() { },
+      onOk() {
+        dispatch({
+          type: 'circle/deleteTheme',
+          payload: {
+            id: record.id
+          }
+        })
+      },
       onCancel() { },
     })
   }
@@ -80,7 +81,7 @@ class Theme extends Component {
     dataIndex: 'theme',
   }, {
     title: '发布账号',
-    dataIndex: 'account',
+    dataIndex: 'accountName',
   }, {
     title: '创建时间',
     dataIndex: 'ctime',
@@ -89,14 +90,15 @@ class Theme extends Component {
     dataIndex: 'operation',
     render: (text, record) => (
       <span>
-        <a onClick={this.showDetailModal}>编辑</a>
+        <a onClick={() => this.showDetailModal(record)}>编辑</a>
         <Divider type="vertical" />
-        <a onClick={this.showConfirm}>删除</a>
+        <a onClick={() => this.showConfirm(record)}>删除</a>
       </span>
     ),
   }]
 
   render() {
+    const { circle: { themeData } } = this.props
     return (
       <PageHeaderWrapper
         title="话题管理"
@@ -111,7 +113,8 @@ class Theme extends Component {
         >
           <Table
             columns={this.columns}
-            dataSource={data}
+            dataSource={themeData}
+            rowKey={record => record.id}
           />
         </Card>
         <MyModal
@@ -124,6 +127,7 @@ class Theme extends Component {
           title="话题详情"
           visible={this.state.detailVisible}
           onOk={this.detailSure}
+          record={this.state.record}
           onCancel={this.detailCancel}
           detail={true}
         />
@@ -132,4 +136,4 @@ class Theme extends Component {
   }
 }
 
-export default Theme
+export default connect(({ circle }) => ({ circle }))(Theme)

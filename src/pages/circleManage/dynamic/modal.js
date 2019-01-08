@@ -14,7 +14,8 @@ class MyModal extends React.Component {
   render() {
     const {
       title,
-      visible
+      visible,
+      record
     } = this.props
 
     return (
@@ -24,17 +25,21 @@ class MyModal extends React.Component {
         footer={null}
         onCancel={this.handleCancel}
       >
-        <Row>
-          <Col span={5} offset={3} style={styles.font}>所属主题：</Col>
-          <Col span={12}></Col>
+        <Row style={styles.font}>
+          <Col span={5} offset={3}>动态详情：</Col>
+          <Col span={12}>{record.detail}</Col>
         </Row>
-        <Row>
-          <Col span={5} offset={3} style={styles.font}>发布用户：</Col>
-          <Col span={12}></Col>
+        <Row style={styles.font}>
+          <Col span={5} offset={3}>所属主题：</Col>
+          <Col span={12}>{record.theme}</Col>
         </Row>
-        <Row>
-          <Col span={5} offset={3} style={styles.font}>发布时间：</Col>
-          <Col span={12}></Col>
+        <Row style={styles.font}>
+          <Col span={5} offset={3}>发布用户：</Col>
+          <Col span={12}>{record.accountName}</Col>
+        </Row>
+        <Row style={styles.font}>
+          <Col span={5} offset={3}>发布时间：</Col>
+          <Col span={12}>{record.ctime}</Col>
         </Row>
       </Modal>
     )

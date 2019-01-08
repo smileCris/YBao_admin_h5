@@ -56,12 +56,53 @@ export async function storyAdd(params) {
   });
 }
 
-export async function editTheme(params) {
+// 妈妈圈-主题列表
+export async function themeList() {
+  return request('/api/circle/listTheme');
+}
+
+// 妈妈圈-主题编辑
+export async function themeEdit(params) {
   return request('/api/circle/editTheme', {
     method: 'POST',
     body: {
-      ...params,
-    },
+      ...params
+    }
+  });
+}
+
+// 妈妈圈-主题删除
+export async function themeDelete(params) {
+  return request('/api/circle/deleteTheme', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
+// 妈妈圈-主题添加
+export async function themeAdd(params) {
+  return request('/api/circle/addTheme', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
+// 妈妈圈-动态列表
+export async function dynamicList() {
+  return request('/api/circle/listDynamic');
+}
+
+// 妈妈圈-动态删除
+export async function dynamicDelete(params) {
+  return request('/api/circle/deleteDynamic', {
+    method: 'POST',
+    body: {
+      ...params
+    }
   });
 }
 
