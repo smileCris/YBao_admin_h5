@@ -106,6 +106,21 @@ export async function dynamicDelete(params) {
   });
 }
 
+// 育儿问答-问答列表
+export async function questionList() {
+  return request('/api/question/list');
+}
+
+// 育儿问答-问答删除
+export async function questionDelete(params) {
+  return request('/api/question/delete', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
 export async function person(params) {
   return request('/api/admin/person', {
     method: 'POST',

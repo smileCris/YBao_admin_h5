@@ -1,26 +1,17 @@
 import { Component } from 'react'
+import { connect } from 'dva'
 import { Card, Table, Divider, Modal } from 'antd'
 import PageHeaderWrapper from '@/components/PageHeaderWrapper'
 import MyModal from './modal'
 
 const confirm = Modal.confirm
 
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    question: `Edward King ${i}`,
-    answerData: 32,
-    accountId: 32,
-    ctime: `London, Park Lane no. ${i}`,
-  })
-}
-
 class QuestionManage extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      visible: false
+      visible: false,
+      record: ''
     }
   }
 
@@ -36,7 +27,7 @@ class QuestionManage extends Component {
     dataIndex: 'answerData',
   }, {
     title: '发布账号',
-    dataIndex: 'accountId',
+    dataIndex: 'accountName',
   }, {
     title: '发布时间',
     dataIndex: 'ctime',
@@ -45,16 +36,17 @@ class QuestionManage extends Component {
     dataIndex: 'operation',
     render: (text, record) => (
       <span>
-        <a onClick={this.showModal}>详情</a>
+        <a onClick={() => this.showModal(record)}>详情</a>
         <Divider type="vertical" />
-        <a onClick={this.showConfirm}>删除</a>
+        <a onClick={() => this.showConfirm(record)}>删除</a>
       </span>
     ),
   }]
 
-  showModal = () => {
+  showModal = (record) => {
     this.setState({
-      visible: true
+      visible: true,
+      record: record
     })
   }
 
@@ -64,18 +56,27 @@ class QuestionManage extends Component {
     })
   }
 
-  showConfirm = () => {
+  showConfirm = (record) => {
+    const { dispatch } = this.props
     confirm({
       title: '你确定要删除这个问题吗？',
       content: '删除后将不可恢复！',
       okText: '确定',
       cancelText: '取消',
-      onOk() { },
+      onOk() {
+        dispatch({
+          type: 'question/delete',
+          payload: {
+            id: record.id
+          }
+        })
+      },
       onCancel() { }
     })
   }
 
   render() {
+    const { question: { listData } } = this.props
     return (
       <PageHeaderWrapper
         title="育儿问答"
@@ -87,17 +88,19 @@ class QuestionManage extends Component {
         >
           <Table
             columns={this.columns}
-            dataSource={data}
+            dataSource={listData}
+            rowKey={record => record.id}
           />
         </Card>
         <MyModal
           title="问答详情"
           visible={this.state.visible}
           onCancel={this.handleCancel}
+          record={this.state.record}
         />
       </PageHeaderWrapper>
     )
   }
 }
 
-export default QuestionManage
+export default connect(({ question }) => ({ question }))(QuestionManage)
