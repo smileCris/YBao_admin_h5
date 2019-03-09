@@ -121,6 +121,41 @@ export async function questionDelete(params) {
   });
 }
 
+// 通知管理-通知列表
+export async function noticeList() {
+  return request('/api/notice/list');
+}
+
+// 通知管理-通知编辑
+export async function noticeEdit(params) {
+  return request('/api/notice/edit', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
+// 通知管理-通知删除
+export async function noticeDelete(params) {
+  return request('/api/notice/delete', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
+// 通知管理-通知添加
+export async function noticeAdd(params) {
+  return request('/api/notice/add', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
 export async function person(params) {
   return request('/api/admin/person', {
     method: 'POST',
