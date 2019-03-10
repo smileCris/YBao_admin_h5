@@ -1,9 +1,23 @@
 import { Modal, Form, Input } from 'antd'
+import { connect } from 'dva'
 import GeographicView from '../component/GeographicView'
 
 const FormItem = Form.Item
 
 const validatorGeographic = (rule, value, callback) => {
+  if (!value) {
+    const info = {
+      province: {
+        key: '',
+        label: ''
+      },
+      city: {
+        key: '',
+        label: ''
+      }
+    }
+    value = info
+  }
   const { province, city } = value
   if (!province.key) {
     callback('请选择所在的省份！')
@@ -16,18 +30,30 @@ const validatorGeographic = (rule, value, callback) => {
 
 class MyModal extends React.Component {
   handleSubmit = () => {
-    this.props.onOk()
+    this.props.form.validateFields((err, values) => {
+      if (err) {
+        return
+      } else {
+        values.address = `${values.address.province.label}${values.address.city.label}`
+        this.props.dispatch({
+          type: 'account/add',
+          payload: values
+        })
+        this.props.onOk()
+        this.props.form.resetFields()
+      }
+    })
   }
 
   handleAddCancel = () => {
     this.props.onCancel()
+    this.props.form.resetFields()
   }
 
   render() {
     const {
       title,
       visible,
-      detail,
       form: { getFieldDecorator }
     } = this.props
 
@@ -53,24 +79,22 @@ class MyModal extends React.Component {
             {...formItemLayout}
             label="账号："
           >
-            {getFieldDecorator('account', {
+            {getFieldDecorator('username', {
               rules: [{ required: true, message: '请输入账号!' }],
             })(
               <Input placeholder="请输入账号" />
             )}
           </FormItem>
-          {
-            detail ? '' : <FormItem
-              {...formItemLayout}
-              label="密码："
-            >
-              {getFieldDecorator('password', {
-                rules: [{ required: true, message: '请输入密码!' }],
-              })(
-                <Input placeholder="请输入密码" />
-              )}
-            </FormItem>
-          }
+          <FormItem
+            {...formItemLayout}
+            label="密码："
+          >
+            {getFieldDecorator('password', {
+              rules: [{ required: true, message: '请输入密码!' }],
+            })(
+              <Input placeholder="请输入密码" />
+            )}
+          </FormItem>
           <FormItem
             {...formItemLayout}
             label="邮箱："
@@ -103,4 +127,4 @@ class MyModal extends React.Component {
   }
 }
 
-export default Form.create()(MyModal)
+export default connect(({account}) => ({account}))(Form.create()(MyModal))

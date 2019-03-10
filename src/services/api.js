@@ -171,6 +171,41 @@ export async function noticeAdd(params) {
   });
 }
 
+// 账号管理-账号列表
+export async function accountList() {
+  return request('/api/admin/list');
+}
+
+// 账号管理-账号停用
+export async function accountStop(params) {
+  return request('/api/admin/stop', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
+// 账号管理-账号删除
+export async function accountDelete(params) {
+  return request('/api/admin/delete', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
+// 账号管理-账号添加
+export async function accountAdd(params) {
+  return request('/api/admin/add', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
 export async function person(params) {
   return request('/api/admin/person', {
     method: 'POST',
