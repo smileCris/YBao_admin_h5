@@ -19,14 +19,18 @@ class MyModal extends React.Component {
   // 编辑
   handleSure = (id) => {
     this.props.form.validateFields((err, values) => {
-      values.id = id
-      this.props.dispatch({
-        type: 'story/edit',
-        payload: values
-      })
-      this.props.form.resetFields()
+      if (err) {
+        return
+      } else {
+        values.id = id
+        this.props.dispatch({
+          type: 'story/edit',
+          payload: values
+        })
+        this.props.onOk()
+        this.props.form.resetFields()
+      }
     })
-    this.props.onOk()
   }
 
   // 新增
@@ -35,18 +39,33 @@ class MyModal extends React.Component {
       if (err) {
         return
       }
-      values.img = this.state.imgFile
-      values.file = this.state.storyFile
-      this.props.dispatch({
-        type: 'story/add',
-        payload: values
-      })
-      this.props.form.resetFields()
+      if (this.state.imgFile.length != 0 && this.state.storyFile.length != 0) {
+        values.img = this.state.imgFile
+        values.file = this.state.storyFile
+        this.props.dispatch({
+          type: 'story/add',
+          payload: values
+        })
+        this.props.onOk()
+        this.props.form.resetFields()
+        this.setState({
+          fileList: [],
+          storyFile: [],
+          imgFile: []
+        })
+      } else {
+        message.warning('封面文件或故事文件不为空')
+      }
     })
-    this.props.onOk()
   }
 
   handleCancel = () => {
+    this.props.form.resetFields()
+    this.setState({
+      fileList: [],
+      storyFile: [],
+      imgFile: []
+    })
     this.props.onCancel()
   }
 
@@ -141,7 +160,7 @@ class MyModal extends React.Component {
                     fileList={fileList}
                     onPreview={this.handlePreview}
                     onChange={this.handleChange}
-                    accept="image/*"
+                    accept="image/jpg, image/jpeg, image/png, image/gif"
                   >
                     {fileList.length >= 1 ? null : uploadButton}
                   </Upload>
@@ -161,13 +180,13 @@ class MyModal extends React.Component {
                   name="file"
                   action="http://localhost:8000/api/story/addFile"
                   onChange={this.fileChange}
-                  accept="audio/*"
+                  accept="audio/mp3, audio/wav"
                 >
                   <p className="ant-upload-drag-icon">
                     <Icon type="inbox" />
                   </p>
                   <p className="ant-upload-text">单击或拖动文件到该区域上传</p>
-                  <p className="ant-upload-hint">请上传故事文件</p>
+                  <p className="ant-upload-hint">请上传故事文件（文件后缀名为.mp3/.wav）</p>
                 </Dragger>
               </FormItem>
           }

@@ -44,39 +44,39 @@ export default {
       const res = yield call(themeEdit, payload)
       if (res.code == 200) {
         message.success('更新话题信息成功！', 2.5)
-        yield put({
-          type: 'listTheme'
-        })
       } else {
         message.error(res.message)
       }
       loading()
+      yield put({
+        type: 'listTheme'
+      })
     },
     *deleteTheme({ payload }, { call, put }) {
       const loading = message.loading('保存中...', 0)
       const res = yield call(themeDelete, payload)
       if (res.code == 200) {
         message.success('删除话题成功！', 2.5)
-        yield put({
-          type: 'listTheme'
-        })
       } else {
         message.error(res.message)
       }
       loading()
+      yield put({
+        type: 'listTheme'
+      })
     },
     *addTheme({ payload }, { call, put }) {
       const loading = message.loading('保存中...', 0)
       const res = yield call(themeAdd, payload)
       if (res.code == 200) {
         message.success('添加话题成功！', 2.5)
-        yield put({
-          type: 'listTheme'
-        })
       } else {
         message.error(res.message)
       }
       loading()
+      yield put({
+        type: 'listTheme'
+      })
     },
     *listDynamic({ payload }, { call, put }) {
       const res = yield call(dynamicList, payload)
@@ -92,13 +92,13 @@ export default {
       const res = yield call(dynamicDelete, payload)
       if (res.code == 200) {
         message.success('删除动态成功！', 2.5)
-        yield put({
-          type: 'listDynamic'
-        })
       } else {
         message.error(res.message)
       }
       loading()
+      yield put({
+        type: 'listDynamic'
+      })
     },
   },
 

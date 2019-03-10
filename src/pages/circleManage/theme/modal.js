@@ -9,28 +9,33 @@ class MyModal extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (err) {
         return
+      } else {
+        values.accountName = localStorage.getItem('accountName')
+        this.props.dispatch({
+          type: 'circle/addTheme',
+          payload: values
+        })
+        this.props.onOk()
+        this.props.form.resetFields()
       }
-      values.accountName = localStorage.getItem('accountName')
-      this.props.dispatch({
-        type: 'circle/addTheme',
-        payload: values
-      })
-      this.props.form.resetFields()
     })
-    this.props.onOk()
   }
 
   // 编辑
   handleSubmit = (id) => {
     this.props.form.validateFields((err, values) => {
-      values.id = id
-      this.props.dispatch({
-        type: 'circle/editTheme',
-        payload: values
-      })
-      this.props.form.resetFields()
+      if (err) {
+        return
+      } else {
+        values.id = id
+        this.props.dispatch({
+          type: 'circle/editTheme',
+          payload: values
+        })
+        this.props.onOk()
+        this.props.form.resetFields()
+      }
     })
-    this.props.onOk()
   }
 
   handleCancel = () => {

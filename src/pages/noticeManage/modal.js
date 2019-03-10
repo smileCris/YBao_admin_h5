@@ -10,15 +10,16 @@ class MyModal extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (err) {
         return
+      } else {
+        values.accountName = localStorage.getItem('accountName')
+        this.props.dispatch({
+          type: 'notice/add',
+          payload: values
+        })
+        this.props.onOk()
+        this.props.form.resetFields()
       }
-      values.accountName = localStorage.getItem('accountName')
-      this.props.dispatch({
-        type: 'notice/add',
-        payload: values
-      })
-      this.props.form.resetFields()
     })
-    this.props.onOk()
   }
 
   // 编辑
@@ -26,15 +27,16 @@ class MyModal extends React.Component {
     this.props.form.validateFields((err, values) => {
       if (err) {
         return
+      } else {
+        values.id = id
+        this.props.dispatch({
+          type: 'notice/edit',
+          payload: values
+        })
+        this.props.onOk()
+        this.props.form.resetFields()
       }
-      values.id = id
-      this.props.dispatch({
-        type: 'notice/edit',
-        payload: values
-      })
-      this.props.form.resetFields()
     })
-    this.props.onOk()
   }
 
   handleCancel = () => {
@@ -103,4 +105,4 @@ class MyModal extends React.Component {
   }
 }
 
-export default connect(({notice}) => ({notice}))(Form.create()(MyModal))
+export default connect(({ notice }) => ({ notice }))(Form.create()(MyModal))

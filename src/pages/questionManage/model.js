@@ -36,13 +36,13 @@ export default {
       const res = yield call(questionDelete, payload)
       if (res.code == 200) {
         message.success('删除问答成功！', 2.5)
-        yield put({
-          type: 'list'
-        })
       } else {
         message.error(res.message)
       }
       loading()
+      yield put({
+        type: 'list'
+      })
     }
   },
 

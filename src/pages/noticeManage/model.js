@@ -38,39 +38,39 @@ export default {
       const res = yield call(noticeEdit, payload)
       if (res.code == 200) {
         message.success('更新通知信息成功！', 2.5)
-        yield put({
-          type: 'list'
-        })
       } else {
         message.error(res.message)
       }
       loading()
+      yield put({
+        type: 'list'
+      })
     },
     *delete({ payload }, { call, put }) {
       const loading = message.loading('保存中...', 0)
       const res = yield call(noticeDelete, payload)
       if (res.code == 200) {
         message.success('删除通知成功！', 2.5)
-        yield put({
-          type: 'list'
-        })
       } else {
         message.error(res.message)
       }
       loading()
+      yield put({
+        type: 'list'
+      })
     },
     *add({ payload }, { call, put }) {
       const loading = message.loading('保存中...', 0)
       const res = yield call(noticeAdd, payload)
       if (res.code == 200) {
         message.success('添加通知成功！', 2.5)
-        yield put({
-          type: 'list'
-        })
       } else {
         message.error(res.message)
       }
       loading()
+      yield put({
+        type: 'list'
+      })
     }
   },
 
