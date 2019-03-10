@@ -121,6 +121,21 @@ export async function questionDelete(params) {
   });
 }
 
+// 用户管理-用户列表
+export async function userList() {
+  return request('/api/user/list');
+}
+
+// 用户管理-用户编辑
+export async function userStop(params) {
+  return request('/api/user/stop', {
+    method: 'POST',
+    body: {
+      ...params
+    }
+  });
+}
+
 // 通知管理-通知列表
 export async function noticeList() {
   return request('/api/notice/list');

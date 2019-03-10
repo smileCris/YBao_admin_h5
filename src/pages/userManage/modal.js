@@ -14,7 +14,8 @@ class MyModal extends React.Component {
   render() {
     const {
       title,
-      visible
+      visible,
+      record
     } = this.props
 
     return (
@@ -24,21 +25,25 @@ class MyModal extends React.Component {
         footer={null}
         onCancel={this.handleCancel}
       >
-        <Row>
-          <Col span={5} offset={3} style={styles.font}>用户名：</Col>
-          <Col span={12}></Col>
+        <Row style={styles.font}>
+          <Col span={5} offset={3}>用户名：</Col>
+          <Col span={12}>{record.username}</Col>
         </Row>
-        <Row>
-          <Col span={5} offset={3} style={styles.font}>邮箱：</Col>
-          <Col span={12}></Col>
+        <Row style={styles.font}>
+          <Col span={5} offset={3}>状态：</Col>
+          <Col span={12}>{record.status === 1 ? '启用' : '停用'}</Col>
         </Row>
-        <Row>
-          <Col span={5} offset={3} style={styles.font}>创建时间：</Col>
-          <Col span={12}></Col>
+        <Row style={styles.font}>
+          <Col span={5} offset={3}>邮箱：</Col>
+          <Col span={12}>{record.email}</Col>
         </Row>
-        <Row>
-          <Col span={5} offset={3} style={styles.font}>最近登录时间：</Col>
-          <Col span={12}></Col>
+        <Row style={styles.font}>
+          <Col span={5} offset={3}>住址：</Col>
+          <Col span={12}>{record.address}</Col>
+        </Row>
+        <Row style={styles.font}>
+          <Col span={5} offset={3}>创建时间：</Col>
+          <Col span={12}>{record.ctime}</Col>
         </Row>
       </Modal>
     )
